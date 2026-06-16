@@ -228,6 +228,11 @@ CSRF 7 Cheat
 
 To complete this challenge, a user must exploit an SQL Wild Card Enumeration in the 'Retrieve Token' function to retrieve other users CSRF token (Submit a percentage sign \- you may need to encode it to %25). This information must be utilised to launch a CSRF attack against them before they refresh the challenge page themselves. Once a victim refreshes the challenge page, their token updates. Social Engineering will need to be utilised to successfully complete this challenge.
 
+CSRF Cheat 
+
+to complete this challenge paste the following js in [https://htmledit.squarefree.com/] link
+<img src="https://192.168.235.113:42281/root/grantComplete/csrfLesson?userId=112013236"/>
+
 CSRF Challenge JSON \- not available good luck
 
 **SECURITY SHEPHARD \- SQL INJECTION**
